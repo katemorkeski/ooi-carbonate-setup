@@ -1,0 +1,92 @@
+---
+title: "ooi-carbonate-setup"
+author: "Kate Morkeski"
+date: "1/4/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+#load required packages
+require(tidyverse) 
+require(httr)
+require(readxl)
+require(here)
+
+#set path to root of project
+here("ooi-carbonate-setup")
+
+```
+
+## Access OOI data from Alfresco
+
+```{r}
+
+
+# Pioneer 14 Sampling Log Version 1-01
+log_url <- ('https://alfresco.oceanobservatories.org/alfresco/webdav/OOI/Coastal%20Pioneer%20Array/Cruise%20Data/Pioneer-14_AR44_2020-06-07/Ship%20Data/Water%20Sampling/Pioneer-14_AR44_CTD_Sampling_Log_2020-12-07_Ver_1-01.xlsx')
+
+# Pioneer 14 salinity data Version 1-01
+sal_url <- ('https://alfresco.oceanobservatories.org/alfresco/webdav/OOI/Coastal%20Pioneer%20Array/Cruise%20Data/Pioneer-14_AR44_2020-06-07/Ship%20Data/Water%20Sampling/Pioneer-14_AR44_Salinity_Sample_Data_2020-12-07_Ver_1-01.xlsx')
+
+
+```
+
+
+```{r}
+
+# Supply credentials for Alfresco
+creds <- read_file("authenticate.txt")
+#creds <- read_csv("authenticate.csv")
+
+httr::GET(log_url, authenticate(creds, creds), write_disk(logtf <- tempfile(fileext = ".xlsx")))
+
+logtf
+
+httr::GET(sal_url, authenticate(creds, creds), write_disk(saltf <- tempfile(fileext = ".xlsx")))
+
+saltf
+
+```
+
+## Read in Excel file from Alfresco and format cruise ID and column headers
+
+```{r}
+
+log <- read_excel(logtf, 1L) 
+sal <- read_excel(saltf, 1L) 
+
+```
+
+# count DICTA and pH bottles
+
+```{r}
+
+n_distinct(log$`DIC/TA Bottle #`, na.rm = TRUE)
+n_distinct(log$`Ph Bottle #`, na.rm = TRUE)
+
+```
+```{r}
+
+bottles <- log %>%
+  rename(Cruise_ID = "Cruise ID") %>%
+  rename(PH_bottle = "Ph Bottle #") %>%
+  rename(DICTA_bottle = "DIC/TA Bottle #") %>%
+  rename(salts_bottle = "Salts Bottle #")
+
+headers <- c("Cruise_ID", "PH_bottle", "DICTA_bottle", "salts_bottle")
+bottles <- bottles[, headers]
+
+
+ # next join salt and bottles
+
+```
+
+
+
+  
+
