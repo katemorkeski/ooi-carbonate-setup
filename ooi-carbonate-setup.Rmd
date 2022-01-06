@@ -74,15 +74,67 @@ n_distinct(log$`Ph Bottle #`, na.rm = TRUE)
 
 bottles <- log %>%
   rename(Cruise_ID = "Cruise ID") %>%
+  rename(station = "Station-Cast #") %>%
+  rename(niskin = "Niskin #") %>%
   rename(PH_bottle = "Ph Bottle #") %>%
   rename(DICTA_bottle = "DIC/TA Bottle #") %>%
-  rename(salts_bottle = "Salts Bottle #")
+  rename(salt_bottle = "Salts Bottle #") 
+ 
+bottles$station <- as.numeric(bottles$station)
+bottles$niskin <- as.numeric(bottles$niskin)
 
-headers <- c("Cruise_ID", "PH_bottle", "DICTA_bottle", "salts_bottle")
+headers <- c("Cruise_ID", "station", "niskin", "Date", "PH_bottle", "DICTA_bottle", "salt_bottle")
 bottles <- bottles[, headers]
 
+sal <- sal %>%
+  rename(station = "Station ID") %>%
+  rename(niskin = "Niskin ID") %>%
+  rename(salt_bottle = "Sample ID") %>%
+  rename(salinity_psu = "Salinity [psu]")
 
- # next join salt and bottles
+```
+
+# match salinity to cruise log
+# this doesn't work because salt bottle IDs are repeated on Pio 14
+```{r}
+
+#bottles$salinity <- NA_integer_ 
+
+#for (i in 1:nrow(bottles)){
+  
+#  bottles$salinity[i] <- sal$salinity_psu[sal$salt_bottle == bottles$salts_bottle[i]]
+  
+#}
+
+```
+
+# isolate carbonate rows
+# check number of bottles
+# join with salinity
+```{r}
+
+bottles <- filter(bottles, PH_bottle != "NA" | DICTA_bottle != "NA")
+
+n_distinct(bottles$DICTA_bottle, na.rm = TRUE)
+n_distinct(bottles$PH_bottle, na.rm = TRUE)
+
+bottles_sal <- left_join(bottles, sal, c("station", "niskin", "salt_bottle"))
+
+```
+
+# clean up salinity dataframe and write to csv
+
+```{r}
+
+bottles_sal$salinity_psu <- as.numeric(bottles_sal$salinity_psu)
+
+bottles_sal <- bottles_sal %>%
+  mutate(salinity_psu = round(salinity_psu, 4))
+
+headers <- c("Cruise_ID", "Date", "DICTA_bottle", "PH_bottle", "salinity_psu")
+bottles_sal <- bottles_sal[, headers]
+
+write_csv(bottles_sal, "Pioneer_14_carbonate_bottle_salinity.csv")
 
 ```
 
