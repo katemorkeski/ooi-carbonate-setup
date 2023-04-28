@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 
-#load required packages
+#load required packages #TODO: switch from require to library
 require(tidyverse) 
 require(httr)
 require(readxl)
