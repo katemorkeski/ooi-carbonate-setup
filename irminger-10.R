@@ -2,11 +2,11 @@
 
 # read in URLs and get data files
 
-# Irminger 8 Sampling Log Version 1-00
-log_url <- ('https://alfresco.oceanobservatories.org/alfresco/webdav/OOI/Global%20Irminger%20Sea%20Array/Cruise%20Data/Irminger_Sea-08_AR60-01_2021-08-03/Ship%20Data/Water%20Sampling/Irminger_Sea-08_AR60-01_CTD_Sampling_Log_2022-10-27_Ver_1-01.xlsx')
+# Irminger 10 Sampling Log Version 1-00
+log_url <- ('https://alfresco.oceanobservatories.org/alfresco/webdav/OOI/Global%20Irminger%20Sea%20Array/Cruise%20Data/Irminger_Sea-10_AR76-03_2023-08-27/Ship%20Data/Water%20Sampling/Irminger_Sea-10_AR76-03_CTD_Sampling_Log_2023-10-13_Ver_1-00.xlsx')
 
-# Irminger 8 salinity data Version 1-00
-sal_url <- ('https://alfresco.oceanobservatories.org/alfresco/webdav/OOI/Global%20Irminger%20Sea%20Array/Cruise%20Data/Irminger_Sea-08_AR60-01_2021-08-03/Ship%20Data/Water%20Sampling/Irminger_Sea-08_AR60-01_Salinity_Sample_Data_2021-09-02_Ver_1-00.xlsx')
+# Irminger 10 salinity data Version 1-00
+sal_url <- ('https://alfresco.oceanobservatories.org/alfresco/webdav/OOI/Global%20Irminger%20Sea%20Array/Cruise%20Data/Irminger_Sea-10_AR76-03_2023-08-27/Ship%20Data/Water%20Sampling/Irminger_Sea-10_AR76-03_Salinity_Sample_Data_2023-10-04_Ver_1-00.xlsx')
 
 
 # Supply credentials for Alfresco
@@ -80,4 +80,4 @@ bottles_sal <- bottles_sal %>%
 headers <- c("Cruise_ID", "Date", "DICTA_bottle", "PH_bottle", "salinity_psu")
 bottles_sal <- bottles_sal[, headers]
 
-write_csv(bottles_sal, "Irminger_08_carbonate_bottle_salinity.csv")
+write_csv(bottles_sal, "Irminger_10_carbonate_bottle_salinity.csv")

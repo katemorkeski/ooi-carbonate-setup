@@ -11,11 +11,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 
-#load required packages #TODO: switch from require to library
-require(tidyverse) 
-require(httr)
-require(readxl)
-require(here)
+#load required packages 
+library(tidyverse) 
+library(httr)
+library(readxl)
+library(here)
 
 #set path to root of project
 here("ooi-carbonate-setup")
