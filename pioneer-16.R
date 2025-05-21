@@ -1,5 +1,5 @@
 
-## Access OOI data from Alfresco
+## Access OOI data from OOI Raw Data Repository
 
 # read in leg A URLs and get data files
 
