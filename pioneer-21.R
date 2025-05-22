@@ -1,4 +1,3 @@
-
 ## Access OOI data from OOI Raw Data Repository
 
 # read in libraries
@@ -7,21 +6,16 @@ library(readxl)
 library(tidyverse)
 
 
-# read in leg A URLs and get data files  (--> adjust to new repository)
+# read in leg A URLs and get data files  (-->  new repository)
 
-# Sampling Log Leg A Version 1-00  (--> adjust to new repository)
-#log_url <- ('https://alfresco.oceanobservatories.org/alfresco/webdav/OOI/Coastal%20Pioneer%20NES%20Array/Cruise%20Data/Pioneer-18_AR66_2022-04-08/Ship%20Data/Water%20Sampling/Pioneer-18_AR66A_CTD_Sampling_Log_2022-04-28_Ver_1-00.xlsx')
-log_url <- ('https://rawdata.oceanobservatories.org/files/cruise_data/Pioneer-NES/Pioneer-18_AR66_2022-04-08/Water_Sampling/Pioneer-18_AR66A_CTD_Sampling_Log_2022-04-28_Ver_1-00.xlsx')
-  
-# salinity data Leg A Version 1-00  (--> adjust to new repository)
-#sal_url <- ('https://alfresco.oceanobservatories.org/alfresco/webdav/OOI/Coastal%20Pioneer%20NES%20Array/Cruise%20Data/Pioneer-18_AR66_2022-04-08/Ship%20Data/Water%20Sampling/Pioneer-18_AR66A_Salinity_Sample_Data_2022-05-13_Ver_1-00.xlsx')
-sal_url <- ('https://rawdata.oceanobservatories.org/files/cruise_data/Pioneer-NES/Pioneer-18_AR66_2022-04-08/Water_Sampling/Pioneer-18_AR66A_Salinity_Sample_Data_2022-05-13_Ver_1-00.xlsx')
+# Sampling Log Leg A Version 1-00  
+log_url <- ('https://rawdata.oceanobservatories.org/files/cruise_data/Pioneer-MAB/Pioneer-21_AR87_2025-03-28/Water_Sampling/Pioneer-21_AR87A_CTD_Sampling_Log_2025-05-14_Ver_1-00.xlsx')
+
+# salinity data Leg A Version 1-00   --> salinity data not uploaded yet
+sal_url <- ('')
 
 
-# # Supply credentials for Alfresco
-# creds <- read_file("authenticate.txt")
 
-#httr::GET(log_url, authenticate(creds, creds), write_disk(logtf <- tempfile(fileext = ".xlsx")))
 httr::GET(log_url, write_disk(logtf <- tempfile(fileext = ".xlsx")))
 
 logtf
@@ -39,13 +33,11 @@ salA <- read_excel(saltf, 1L)
 
 # read in leg B URLs and get data files
 
-# Sampling Log Leg B Version 1-01
-#log_url <- ('https://alfresco.oceanobservatories.org/alfresco/webdav/OOI/Coastal%20Pioneer%20NES%20Array/Cruise%20Data/Pioneer-18_AR66_2022-04-08/Ship%20Data/Water%20Sampling/Pioneer-18_AR66B_CTD_Sampling_Log_2022-05-10_Ver_1-00.xlsx')
-log_url <- ('https://rawdata.oceanobservatories.org/files/cruise_data/Pioneer-NES/Pioneer-18_AR66_2022-04-08/Water_Sampling/Pioneer-18_AR66B_CTD_Sampling_Log_2022-05-10_Ver_1-00.xlsx')
+# Sampling Log Leg B Version 1-01  
+log_url <- ('https://rawdata.oceanobservatories.org/files/cruise_data/Pioneer-MAB/Pioneer-21_AR87_2025-03-28/Water_Sampling/Pioneer-21_AR87B_CTD_Sampling_Log_2025-05-19_Ver_1-00.xlsx')
 
-# salinity data Leg B Version 1-00
-#sal_url <- ('https://alfresco.oceanobservatories.org/alfresco/webdav/OOI/Coastal%20Pioneer%20NES%20Array/Cruise%20Data/Pioneer-18_AR66_2022-04-08/Ship%20Data/Water%20Sampling/Pioneer-18_AR66B_Salinity_Sample_Data_2022-05-13_Ver_1-00.xlsx')
-sal_url <- ('https://rawdata.oceanobservatories.org/files/cruise_data/Pioneer-NES/Pioneer-18_AR66_2022-04-08/Water_Sampling/Pioneer-18_AR66B_Salinity_Sample_Data_2022-05-13_Ver_1-00.xlsx')
+# salinity data Leg B Version 1-00   --> salinity data not uploaded yet
+sal_url <- ('')
 
 
 #### Remember to increment cruise number for csv at end of script ####
@@ -60,14 +52,11 @@ httr::GET(sal_url, write_disk(saltf <- tempfile(fileext = ".xlsx")))
 
 saltf
 
-
-
 # assign leg B files to data frames
 logB <- read_excel(logtf, 1L) 
 salB <- read_excel(saltf, 1L) 
 
-# special for Pio 18, add Notes column to leg B salinity
-salB$Notes <- NA_character_
+
 
 # combine legs
 log <- rbind(logA, logB)
@@ -94,9 +83,8 @@ bottles <- log %>%
 bottles$station <- as.numeric(bottles$station)
 bottles$niskin <- as.numeric(bottles$niskin)
 
-headers <- c("Cruise_ID", "station", "start_lat", "start_lon", "niskin", "trip_depth_m", "Date", "PH_bottle", "DICTA_bottle", "salt_bottle")
+headers <- c("Cruise_ID", "station",  "start_lat", "start_lon", "niskin", "trip_depth_m", "Date", "PH_bottle", "DICTA_bottle", "salt_bottle")
 bottles <- bottles[, headers]
-
 
 sal <- sal %>%
   rename(Cruise_ID = "Cruise ID") %>%
@@ -118,8 +106,8 @@ bottles <- filter(bottles, PH_bottle != "NA" | DICTA_bottle != "NA")
 n_distinct(bottles$DICTA_bottle, na.rm = TRUE)
 n_distinct(bottles$PH_bottle, na.rm = TRUE)
 
-bottles_sal <- left_join(bottles, sal, c("Cruise_ID","station", "niskin", "salt_bottle"))
 
+bottles_sal <- left_join(bottles, sal, c("Cruise_ID","station", "niskin", "salt_bottle"))
 
 
 # clean up salinity dataframe 
@@ -133,10 +121,11 @@ bottles_sal <- bottles_sal %>%
 # bottles_sal <- bottles_sal[, headers]
 
 
-# write salinity dataframe to csv
-bottles_sal_18 <- bottles_sal
-#write_csv(bottles_sal, "Pioneer_18_carbonate_bottle_salinity.csv")
+# write salinity dataframe and write to csv
+bottles_sal_21 <- bottles_sal
+#write_csv(bottles_sal, "Pioneer_21_carbonate_bottle_salinity.csv")
 
 # write bottle_sal with all parameters to csv
-write_csv(bottles_sal_18, "Pioneer_18_carbonate_bottle_salinity_meta.csv")
+write_csv(bottles_sal_21, "Pioneer_21_carbonate_bottle_salinity_meta.csv")
+
 

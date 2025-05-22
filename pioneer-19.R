@@ -122,13 +122,16 @@ bottles_sal$salinity_psu <- as.numeric(bottles_sal$salinity_psu)
 bottles_sal <- bottles_sal %>%
   mutate(salinity_psu = round(salinity_psu, 4))
 
-headers <- c("Cruise_ID", "Date", "DICTA_bottle", "PH_bottle", "salinity_psu")
-bottles_sal <- bottles_sal[, headers]
+# comment out to keep all parameters from bottle 
+# headers <- c("Cruise_ID", "Date", "DICTA_bottle", "PH_bottle", "salinity_psu")
+# bottles_sal <- bottles_sal[, headers]
 
 
 # write salinity dataframe and write to csv
 bottles_sal_19 <- bottles_sal
-write_csv(bottles_sal, "Pioneer_19_carbonate_bottle_salinity.csv")
+#write_csv(bottles_sal, "Pioneer_19_carbonate_bottle_salinity.csv")
 
+# write bottle_sal with all parameters to csv
+write_csv(bottles_sal_19, "Pioneer_19_carbonate_bottle_salinity_meta.csv")
 
 
