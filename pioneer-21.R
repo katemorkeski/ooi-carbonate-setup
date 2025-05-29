@@ -9,10 +9,11 @@ library(tidyverse)
 # read in leg A URLs and get data files  (-->  new repository)
 
 # Sampling Log Leg A Version 1-00  
-log_url <- ('https://rawdata.oceanobservatories.org/files/cruise_data/Pioneer-MAB/Pioneer-21_AR87_2025-03-28/Water_Sampling/Pioneer-21_AR87A_CTD_Sampling_Log_2025-05-14_Ver_1-00.xlsx')
+log_url <- ('https://rawdata.oceanobservatories.org/files/cruise_data/Pioneer-MAB/Pioneer-21_AR87_2025-03-28/Water_Sampling/Pioneer-21_AR87A_CTD_Sampling_Log_2025-05-23_Ver_1-01.xlsx')
+
 
 # salinity data Leg A Version 1-00   --> salinity data not uploaded yet
-sal_url <- ('')
+sal_url <- ('https://rawdata.oceanobservatories.org/files/cruise_data/Pioneer-MAB/Pioneer-21_AR87_2025-03-28/Water_Sampling/Pioneer-21_AR87A_Salinity_Sample_Data_2025-05-23_Ver_1-00.xlsx')
 
 
 
@@ -37,7 +38,7 @@ salA <- read_excel(saltf, 1L)
 log_url <- ('https://rawdata.oceanobservatories.org/files/cruise_data/Pioneer-MAB/Pioneer-21_AR87_2025-03-28/Water_Sampling/Pioneer-21_AR87B_CTD_Sampling_Log_2025-05-19_Ver_1-00.xlsx')
 
 # salinity data Leg B Version 1-00   --> salinity data not uploaded yet
-sal_url <- ('')
+sal_url <- ('https://rawdata.oceanobservatories.org/files/cruise_data/Pioneer-MAB/Pioneer-21_AR87_2025-03-28/Water_Sampling/Pioneer-21_AR87B_Salinity_Sample_Data_2025-05-23_Ver_1-00.xlsx')
 
 
 #### Remember to increment cruise number for csv at end of script ####
@@ -74,7 +75,10 @@ bottles <- log %>%
   rename(station = "Station-Cast #") %>%
   rename(start_lat = "Start Latitude") %>%
   rename(start_lon = "Start Longitude") %>%
+  rename(btm_depth_m = "Bottom Depth [m]") %>%
   rename(niskin = "Niskin #") %>%
+  rename(date = "Date") %>%
+  rename(time = "Time") %>%
   rename(trip_depth_m = "Trip Depth [m]") %>%
   rename(PH_bottle = "pH Bottle #") %>%
   rename(DICTA_bottle = "DIC/TA Bottle #") %>%
@@ -83,7 +87,7 @@ bottles <- log %>%
 bottles$station <- as.numeric(bottles$station)
 bottles$niskin <- as.numeric(bottles$niskin)
 
-headers <- c("Cruise_ID", "station",  "start_lat", "start_lon", "niskin", "trip_depth_m", "Date", "PH_bottle", "DICTA_bottle", "salt_bottle")
+headers <- c("Cruise_ID", "station", "start_lat", "start_lon", "btm_depth_m", "niskin", "date", "time", "trip_depth_m", "PH_bottle", "DICTA_bottle", "salt_bottle")
 bottles <- bottles[, headers]
 
 sal <- sal %>%
@@ -93,9 +97,8 @@ sal <- sal %>%
   rename(salt_bottle = "Sample ID") %>%
   rename(salinity_psu = "Salinity [psu]")
 
-sal$niskin <- as.numeric(sal$niskin)
 sal$station <- as.numeric(sal$station)
-
+sal$niskin <- as.numeric(sal$niskin)
 
 
 # isolate carbonate rows

@@ -74,7 +74,10 @@ bottles <- log %>%
   rename(station = "Station-Cast #") %>%
   rename(start_lat = "Start Latitude") %>%
   rename(start_lon = "Start Longitude") %>%
+  rename(btm_depth_m = "Bottom Depth [m]") %>%
   rename(niskin = "Niskin #") %>%
+  rename(date = "Date") %>%
+  rename(time = "Time") %>%
   rename(trip_depth_m = "Trip Depth [m]") %>%
   rename(PH_bottle = "pH Bottle #") %>%
   rename(DICTA_bottle = "DIC/TA Bottle #") %>%
@@ -83,7 +86,7 @@ bottles <- log %>%
 bottles$station <- as.numeric(bottles$station)
 bottles$niskin <- as.numeric(bottles$niskin)
 
-headers <- c("Cruise_ID", "station",  "start_lat", "start_lon", "niskin", "trip_depth_m", "Date", "PH_bottle", "DICTA_bottle", "salt_bottle")
+headers <- c("Cruise_ID", "station", "start_lat", "start_lon", "btm_depth_m", "niskin", "date", "time", "trip_depth_m", "PH_bottle", "DICTA_bottle", "salt_bottle")
 bottles <- bottles[, headers]
 
 sal <- sal %>%
@@ -93,9 +96,8 @@ sal <- sal %>%
   rename(salt_bottle = "Sample ID") %>%
   rename(salinity_psu = "Salinity [psu]")
 
-sal$niskin <- as.numeric(sal$niskin)
 sal$station <- as.numeric(sal$station)
-
+sal$niskin <- as.numeric(sal$niskin)
 
 
 # isolate carbonate rows
@@ -126,6 +128,6 @@ bottles_sal_20 <- bottles_sal
 #write_csv(bottles_sal, "Pioneer_20_carbonate_bottle_salinity.csv")
 
 # write bottle_sal with all parameters to csv
-write_csv(bottles_sal_20, "Pioneer_20_carbonate_bottle_salinity_meta.csv")
+#write_csv(bottles_sal_20, "Pioneer_20_carbonate_bottle_salinity_meta.csv")
 
 
