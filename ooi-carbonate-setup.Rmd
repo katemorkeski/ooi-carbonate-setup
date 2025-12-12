@@ -16,6 +16,7 @@ library(tidyverse)
 library(httr)
 library(readxl)
 library(here)
+library(janitor)
 
 #set path to root of project
 here("ooi-carbonate-setup")
