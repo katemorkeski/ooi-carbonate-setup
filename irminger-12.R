@@ -2,11 +2,11 @@
 
 # read in URLs and get data files
 
-# Sampling Log Version 1-00
-log_url <- ('https://rawdata.oceanobservatories.org/files/cruise_data/Irminger_Sea/Irminger_Sea-11_AR84-01_2024-06-02/Water_Sampling/Irminger_Sea-11_AR84-01_CTD_Sampling_Log_2024-11-06_Ver_1-00.xlsx')
+# Sampling Log Version 1-01
+log_url <- ('https://rawdata.oceanobservatories.org/files/cruise_data/Irminger_Sea/Irminger_Sea-12_RR2505_2025-07-18/Water_Sampling/Irminger_Sea-12_RR2505_CTD_Sampling_Log_2025-11-24_Ver_1-01.xlsx')
 
 # salinity data Version 1-00
-sal_url <- ('https://rawdata.oceanobservatories.org/files/cruise_data/Irminger_Sea/Irminger_Sea-11_AR84-01_2024-06-02/Water_Sampling/Irminger_Sea-11_AR84-01_Salinity_Sample_Data_2024-11-06_Ver_1-00.xlsx')
+sal_url <- ('https://rawdata.oceanobservatories.org/files/cruise_data/Irminger_Sea/Irminger_Sea-12_RR2505_2025-07-18/Water_Sampling/Irminger_Sea-12_RR2505_Salinity_Sample_Data_2025-09-05_Ver_1-00.xlsx')
 
 httr::GET(log_url, write_disk(logtf <- tempfile(fileext = ".xlsx")))
 
@@ -18,7 +18,7 @@ saltf
 
 # assign files to data frames
 log <- read_excel(logtf, 1L) 
-sal <- read_excel( saltf, 2L) # second sheet
+sal <- read_excel( saltf, 1L)
 
 # count DICTA and pH bottles
 n_distinct(log$`DIC/TA Bottle #`, na.rm = TRUE)
@@ -51,6 +51,7 @@ sal <- select(sal, -cruise_id, -station_id, -niskin_id, -sample_id)
 # isolate carbonate rows
 # check number of bottles
 # match salinity to cruise log
+
 bottles <- filter(bottles, PH_bottle != "NA" | DICTA_bottle != "NA")
 
 n_distinct(bottles$DICTA_bottle, na.rm = TRUE)
@@ -67,6 +68,13 @@ bottles_sal <- bottles_sal %>%
   relocate(salinity_psu, .after = salt_bottle)
 
 #headers <- c("cruise_id", "date", "DICTA_bottle", "PH_bottle", "salinity_psu")
-log_irm11 <- bottles_sal
+log_irm12 <- bottles_sal
 
-write_csv(log_irm11, "Irminger_11_carbonate_bottle_salinity.csv")
+write_csv(log_irm12, "Irminger_12_carbonate_bottle_salinity.csv")
+
+log_irm080910 <- read_csv("Irminger_08_09_10_carbonate_bottle_metadata.csv")
+
+log_irm08_12 <- rbind(log_irm080910, log_irm11, log_irm12)
+write_csv(log_irm08_12, "Irminger_08-12_carbonate_bottle_metadata.csv")
+
+
