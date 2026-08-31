@@ -8,16 +8,15 @@ library(janitor)
 #set path to root of project
 here("ooi-carbonate-setup")
 
-
-## Access OOI data from Alfresco
+## Access OOI data
 
 # read in URLs and get data files
 
 # Sampling Log Version 1-00
-log_url <- ("https://rawdata.oceanobservatories.org/files/cruise_data/Station_Papa/Station_Papa-11_SKQ202408S_2024-05-29/Water_Sampling/Station_Papa-11_SKQ202408S_CTD_Sampling_Log_2024-07-17_Ver_1-00.xlsx")
+log_url <- ('https://rawdata.oceanobservatories.org/files/cruise_data/Station_Papa/Station_Papa-12_SKQ202511S_2025-05-19/Water_Sampling/Station_Papa-12_SKQ202511S_CTD_Sampling_Log_2025-06-27_Ver_1-00.xlsx')
 
-# salinity data Version 1-00 
-sal_url <- ('https://rawdata.oceanobservatories.org/files/cruise_data/Station_Papa/Station_Papa-11_SKQ202408S_2024-05-29/Water_Sampling/Station_Papa-11_SKQ202408S_Salinity_Sample_Data_2024-11-06_Ver_1-00.xlsx')
+# salinity data Version 1-01 
+sal_url <- ('https://rawdata.oceanobservatories.org/files/cruise_data/Station_Papa/Station_Papa-12_SKQ202511S_2025-05-19/Water_Sampling/Station_Papa-12_SKQ202511S_Salinity_Sample_Data_2025-07-11_Ver_1-01.xlsx')
 
 httr::GET(log_url, write_disk(logtf <- tempfile(fileext = ".xlsx")))
 
@@ -77,7 +76,7 @@ bottles_sal$salinity_psu <- as.numeric(bottles_sal$salinity_psu)
 bottles_sal <- bottles_sal %>%
   mutate(salinity_psu = round(salinity_psu, 4))
 
-headers <- c("cruise_id", "date", "station", "niskin", "depth", "PH_bottle", "DICTA_bottle", "salt_bottle", "salinity_psu")
+headers <- c("cruise_id", "date", "station", "niskin", "depth", "PH_bottle", "DICTA_bottle","salt_bottle","salinity_psu")
 bottles_sal <- bottles_sal[, headers]
 
-write_csv(bottles_sal, "Papa_11_carbonate_bottle_salinity.csv")
+write_csv(bottles_sal, "Papa_12_carbonate_bottle_salinity.csv")
